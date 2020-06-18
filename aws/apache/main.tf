@@ -1,6 +1,4 @@
-variable "ami-name" {
-  default = "ami-07ebfd5b3428b6f4d"
-}
+
 
 provider "aws" {
   version = "~> 2.0"
@@ -53,8 +51,8 @@ resource "aws_security_group_rule" "sgr-http" {
 
 resource "aws_instance" "apache" {
   ami = var.ami-name
-  instance_type = "t2.micro"
-  key_name = "aws-doliveira"
+  instance_type = var.instance_type
+  key_name = var.key_name
   tags = { 
     Name = "apache"
   }
