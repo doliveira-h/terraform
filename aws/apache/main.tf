@@ -6,9 +6,9 @@ provider "aws" {
   profile = "default"
 }
 
-resource "aws_security_group" "sg-ssh" {
-  name = "sg-ssh"
-  description = "sg-ssh"
+resource "aws_security_group" "sg_ssh" {
+  name = "sg_ssh"
+  description = "sg_ssh"
   tags = {
     Name = "ssh"
   }
@@ -20,12 +20,12 @@ resource "aws_security_group_rule" "sgr-ssh" {
   to_port = 22
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.sg-ssh.id
+  security_group_id = aws_security_group.sg_ssh.id
 }
 
-resource "aws_security_group" "sg-http" {
-  name = "sg-http"
-  description = "sg-http"
+resource "aws_security_group" "sg_http" {
+  name = "sg_http"
+  description = "sg_http"
   tags = {
     Name = "http"
   }
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "sgr-internal" {
   to_port     = 0
   protocol    = "-1"
   cidr_blocks = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.sg-http.id
+  security_group_id = aws_security_group.sg_http.id
 }
 
 resource "aws_security_group_rule" "sgr-http" {
@@ -46,7 +46,7 @@ resource "aws_security_group_rule" "sgr-http" {
   to_port = 80
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.sg-http.id
+  security_group_id = aws_security_group.sg_http.id
 }
 
 resource "aws_instance" "apache" {
@@ -56,6 +56,6 @@ resource "aws_instance" "apache" {
   tags = { 
     Name = "apache"
   }
-  vpc_security_group_ids = ["${aws_security_group.sg-ssh.id}","${aws_security_group.sg-http.id}"]
+  vpc_security_group_ids = ["${aws_security_group.sg_ssh.id}","${aws_security_group.sg_http.id}"]
   user_data = file("install-apache.sh")
 }
