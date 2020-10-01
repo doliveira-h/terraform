@@ -1,1 +1,1 @@
-key_name = "aws-doliveira"
+key_name = "aws-ssh-key"

@@ -1,14 +1,7 @@
-
-
-provider "aws" {
-  version = "~> 2.0"
-  region = "us-east-1"
-  profile = "default"
-}
-
 resource "aws_security_group" "sg_ssh" {
   name = "sg_ssh"
   description = "sg_ssh"
+  vpc_id = aws_vpc.apache_vpc.id
   tags = {
     Name = "ssh"
   }
@@ -26,9 +19,15 @@ resource "aws_security_group_rule" "sgr-ssh" {
 resource "aws_security_group" "sg_http" {
   name = "sg_http"
   description = "sg_http"
+  vpc_id = aws_vpc.apache_vpc.id
   tags = {
     Name = "http"
   }
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = var.key_name
+  public_key = file("~/.ssh/id_rsa.pub")
 }
 
 resource "aws_security_group_rule" "sgr-internal" {
@@ -56,6 +55,8 @@ resource "aws_instance" "apache" {
   tags = { 
     Name = "apache"
   }
+  associate_public_ip_address = true
+  subnet_id = element(aws_subnet.public.*.id,1)
   vpc_security_group_ids = ["${aws_security_group.sg_ssh.id}","${aws_security_group.sg_http.id}"]
   user_data = file("install-apache.sh")
 }
