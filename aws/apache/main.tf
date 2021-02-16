@@ -57,6 +57,6 @@ resource "aws_instance" "apache" {
   }
   associate_public_ip_address = true
   subnet_id = element(aws_subnet.public.*.id,1)
-  vpc_security_group_ids = ["${aws_security_group.sg_ssh.id}","${aws_security_group.sg_http.id}"]
+  vpc_security_group_ids = [aws_security_group.sg_ssh.id,aws_security_group.sg_http.id]
   user_data = file("install-apache.sh")
 }
